@@ -1,0 +1,95 @@
+#:import Factory kivy.factory.Factory
+Manager:
+    MainWindow:
+
+
+<MainWindow>:
+    name: "main"
+    user_password: input_password
+    user_name: input_name
+    canvas.before:
+        Color:
+            rgba: 253, 253, 152, 1
+        Rectangle:
+            pos:self.pos
+            size:self.size
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 10
+        Image:
+            source: 'logo.png'
+            allow_stretch: True
+            size_hint:1,1.5
+        BoxLayout:
+            orientation: 'vertical'
+            padding: 30
+            Label:
+                text: "Введите логин: "
+                text_size: self.size
+                font_name: 'font.ttf'
+                halign: 'center'
+                valign: 'middle'
+                color: 0,0,0,1
+            TextInput:
+                id: input_name
+                hint_text:'Login'
+                text_size: self.size
+                font_name: 'font.ttf'
+                halign: 'center'
+                valign: 'middle'
+                multiline: False
+                size_hint:0.5,1
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            Label:
+                text: "Введите пароль: "
+                text_size: self.size
+                font_name: 'font.ttf'
+                halign: 'center'
+                valign: 'middle'
+                color: 0,0,0,1
+            TextInput:
+                id: input_password
+                font_name: 'font.ttf'
+                hint_text:'Password'
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                multiline: False
+                size_hint:0.5,1
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 20
+            padding:20
+            Label:
+                text:''
+                size_hint:0.1,0.5
+            Button:
+                id: but1
+                size_hint:0.5,0.3
+                text: "Войти"
+                font_name: 'font.ttf'
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+                on_release:
+                    root.into_sys()
+            Button:
+                id: but2
+                size_hint:0.5,0.3
+                text: "Регистрация"
+                font_name: 'font.ttf'
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+                on_release:
+                    root.add_user()
+            Label:
+                text:''
+                size_hint:0.1,0.5
