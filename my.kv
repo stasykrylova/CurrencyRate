@@ -1,7 +1,9 @@
 #:import Factory kivy.factory.Factory
 Manager:
     MainWindow:
-
+    MenuWindowForUser:
+    MenuWindowForRedactor:
+    MenuWindowForAdministrator:
 
 <MainWindow>:
     name: "main"
@@ -76,7 +78,7 @@ Manager:
                 background_normal: 'button.png'
                 background_down: 'button_on.png'
                 on_release:
-                    root.into_sys()
+                    root.authorise()
             Button:
                 id: but2
                 size_hint:0.5,0.3
@@ -89,7 +91,43 @@ Manager:
                 background_normal: 'button.png'
                 background_down: 'button_on.png'
                 on_release:
-                    root.add_user()
+                    root.register()
             Label:
                 text:''
                 size_hint:0.1,0.5
+
+<MenuWindowForAdministrator>
+    name: "menu_adm"
+    Label:
+        text: "ADMINISTRATOR"
+
+<MenuWindowForRedactor>
+    name: "menu_red"
+    Label:
+        text: "REDACTOR"
+
+<MenuWindowForUser>
+    name: "menu_usr"
+    canvas.before:
+        Color:
+            rgba: 253, 253, 152, 1
+        Rectangle:
+            pos:self.pos
+            size:self.size
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 10
+            Image:
+                source: 'main_image.png'
+                allow_stretch: True
+                size_hint:1,1.5
+            Button:
+                text:"Calculator"
+            Button:
+                text: "Calendar"
+            Button:
+                text: "Studing"
+            Button:
+                text: "Prediction"
