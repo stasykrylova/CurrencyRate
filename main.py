@@ -84,6 +84,31 @@ class MenuWindowForRedactor(Screen):
     pass
 
 
+class AddingUser(Screen):
+
+    def add_user(self):
+        if self.login.text == '' or self.password.text == '' or self.role.text == '':
+            plyer.notification.notify(title='Внимание!', message="Необходимо заполнить все поля!")
+        elif self.role.text != "100" and self.role.text != "200" and self.role.text != "300":
+            plyer.notification.notify(title='Внимание!',
+                                      message="Роль должна быть 100-ученик,200-редактор или 300-администратор!")
+        else:
+            con = sqlite3.connect('user.db')
+            cur = con.cursor()
+            try:
+                cur.execute(""" INSERT INTO id (user,password,role)
+                                VALUES (?,?,?)
+                        """, (self.login.text, self.password.text, self.role.text)
+                            )
+                plyer.notification.notify(title='Успех!', message="Пользователь добавлен!")
+                self.manager.transition = RiseInTransition(duration=0.5)
+                self.manager.current = 'menu_adm'
+            except sqlite3.IntegrityError:
+                plyer.notification.notify(title='Внимание!', message="Пользователь уже существует!")
+            con.commit()
+            con.close()
+
+
 class MenuWindowForUser(Screen):
     pass
 
