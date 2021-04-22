@@ -89,16 +89,18 @@ class AddingUser(Screen):
     def add_user(self):
         if self.login.text == '' or self.password.text == '' or self.role.text == '':
             plyer.notification.notify(title='Внимание!', message="Необходимо заполнить все поля!")
-        elif self.role.text != "100" and self.role.text != "200" and self.role.text != "300":
+        elif self.role.text != "ученик" and self.role.text != "редактор" and self.role.text != "администратор":
             plyer.notification.notify(title='Внимание!',
-                                      message="Роль должна быть 100-ученик,200-редактор или 300-администратор!")
+                                      message="Роль должна быть ученик, редактор или администратор!")
         else:
+            choices_dict = {'ученик': 100, 'редактор': 200, 'администратор': 300}
+            role = choices_dict.get(self.role.text)
             con = sqlite3.connect('user.db')
             cur = con.cursor()
             try:
                 cur.execute(""" INSERT INTO id (user,password,role)
                                 VALUES (?,?,?)
-                        """, (self.login.text, self.password.text, self.role.text)
+                        """, (self.login.text, self.password.text, role)
                             )
                 plyer.notification.notify(title='Успех!', message="Пользователь добавлен!")
                 self.manager.transition = RiseInTransition(duration=0.5)
@@ -111,6 +113,71 @@ class AddingUser(Screen):
 
 class MenuWindowForUser(Screen):
     pass
+
+
+class AddingMaterial(Screen):
+    def add_material(self):
+        if self.title.text == '' or self.text.text == '':
+            plyer.notification.notify(title='Внимание!', message="Все поля должны быть заполнены!")
+        else:
+            con = sqlite3.connect('user.db')
+            cur = con.cursor()
+            try:
+                cur.execute(""" INSERT INTO materials (title,material)
+                                        VALUES (?,?)
+                                """, (self.title.text, self.text.text)
+                            )
+                plyer.notification.notify(title='Успех!', message="Материал добавлен!")
+                self.title.text = ''
+                self.text.text = ''
+            except sqlite3.IntegrityError:
+                plyer.notification.notify(title='Внимание!', message="Попробуйте еще раз, что-то пошло не так!")
+            con.commit()
+            con.close()
+
+
+class ReadingMaterial(Screen):
+    result = []
+    i = 0
+    n = len(result)
+
+    def get_materials(self):
+        con = sqlite3.connect('user.db')
+        cur = con.cursor()
+        sql = "SELECT * FROM materials"
+        cur.execute(sql)
+        self.result = cur.fetchall()
+        con.commit()
+        con.close()
+        if self.result:
+            self.n = len(self.result)
+            self.title.text = self.result[self.i][1]
+            self.text.text = self.result[self.i][2]
+            self.i += 1
+        else:
+            self.title.text = "Пока нет материалов"
+            self.text.text = " "
+
+    def change_text(self):
+        if self.i < self.n:
+            self.title.text = self.result[self.i][1]
+            self.text.text = self.result[self.i][2]
+            self.i += 1
+
+        else:
+            self.i = 0
+            self.title.text = self.result[self.i][1]
+            self.text.text = self.result[self.i][2]
+            self.i += 1
+
+
+class Calculator(Screen):
+    def calculate(self, calculation):
+        if calculation:
+            try:
+                self.display.text = str(eval(calculation))
+            except Exception:
+                self.display.text = "Ошибка"
 
 
 class Manager(ScreenManager):
@@ -133,6 +200,12 @@ class MainApp(App):
             FOREIGN KEY (role) REFERENCES roles(ID)
             )
             """)
+        cur.execute(""" CREATE TABLE IF NOT EXISTS materials(
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    title text NOT NULL,
+                    material text NOT NULL
+                    )
+                    """)
         cur.execute("""
             CREATE TABLE IF NOT EXISTS roles(
             ID int,

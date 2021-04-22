@@ -5,6 +5,10 @@ Manager:
     MenuWindowForRedactor:
     MenuWindowForAdministrator:
     AddingUser:
+    AddingMaterial:
+    ReadingMaterial:
+    Calculator:
+
 
 <MainWindow>:
     name: "main"
@@ -138,6 +142,8 @@ Manager:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 background_normal: 'exit.png'
                 background_down: 'exit_on.png'
+                on_release:
+                    app.root.current = "main"
 
 <MenuWindowForRedactor>
     name: "menu_red"
@@ -149,17 +155,15 @@ Manager:
             size:self.size
     BoxLayout:
         orientation: 'vertical'
-        spacing: 10
+        spacing: 20
         padding: 20
         Image:
             source: 'main_image.png'
             allow_stretch: True
-            size_hint:1,5
+            size_hint:1,3.5
         BoxLayout:
             orientation: 'vertical'
             spacing: 10
-            Label:
-                text: ''
             Button:
                 id: but1
                 size_hint:0.5,1
@@ -171,6 +175,16 @@ Manager:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 background_normal: 'button.png'
                 background_down: 'button_on.png'
+                on_release:
+                    app.root.current="add_mat"
+            Button:
+                id: but2
+                size_hint: 0.1, 1.2
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                background_normal: 'exit.png'
+                background_down: 'exit_on.png'
+                on_release:
+                    app.root.current = "main"
 
 <MenuWindowForUser>
     name: "menu_usr"
@@ -192,8 +206,8 @@ Manager:
             orientation: 'vertical'
             spacing: 10
             Button:
-                id: but1
-                size_hint:0.5,0.3
+
+                size_hint:0.5,0.7
                 text: "Калькулятор"
                 font_name: 'font.ttf'
                 text_size: self.size
@@ -202,10 +216,12 @@ Manager:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 background_normal: 'button.png'
                 background_down: 'button_on.png'
+                on_release:
+                    app.root.current = "calculator"
 
             Button:
-                id: but1
-                size_hint:0.5,0.3
+
+                size_hint:0.5,0.7
                 text: "Обучение"
                 font_name: 'font.ttf'
                 text_size: self.size
@@ -214,9 +230,11 @@ Manager:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 background_normal: 'button.png'
                 background_down: 'button_on.png'
+                on_release:
+                    app.root.current = "read_mat"
             Button:
-                id: but1
-                size_hint:0.5,0.3
+
+                size_hint:0.5,0.7
                 text: "Предсказание"
                 font_name: 'font.ttf'
                 text_size: self.size
@@ -225,7 +243,14 @@ Manager:
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 background_normal: 'button.png'
                 background_down: 'button_on.png'
+            Button:
 
+                size_hint: 0.1, 1.2
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                background_normal: 'exit.png'
+                background_down: 'exit_on.png'
+                on_release:
+                    app.root.current = "main"
 
 <AddingUser>
     name: "add_usr"
@@ -240,8 +265,16 @@ Manager:
             size:self.size
     BoxLayout:
         orientation: 'vertical'
-        padding: 20
+        padding: 10
         spacing: 5
+        Label:
+            text: "Новый пользователь"
+            font_size: '20pt'
+            size_hint: 1,1.5
+            font_name: 'font.ttf'
+            halign: 'center'
+            valign: 'middle'
+            color: 0,0,0,1
         Label:
             canvas:
                 Color:
@@ -335,5 +368,296 @@ Manager:
             background_down: 'button_on.png'
             on_release:
                 root.add_user()
+        Button:
+            id: but2
+            size_hint: 0.1, 1.2
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            background_normal: 'exit.png'
+            background_down: 'exit_on.png'
+            on_release:
+                app.root.current = "menu_adm"
 
+<AddingMaterial>
+    name: "add_mat"
+    title: input_title
+    text: input_text
+    canvas.before:
+        Color:
+            rgba: 253, 253, 152, 1
+        Rectangle:
+            pos:self.pos
+            size:self.size
+    BoxLayout:
+        orientation: 'vertical'
+        padding:10
+        spacing:10
+        Label:
+            text: "Новый материал для обучения"
+            font_size: '15pt'
+            size_hint: 1,1.5
+            font_name: 'font.ttf'
+            halign: 'center'
+            valign: 'middle'
+            color: 0,0,0,1
+        Label:
+            canvas:
+                Color:
+                    rgba: 0.85, 0.97, 0.97, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        Label:
+            text: "Заголовок"
+            text_size: self.size
+            size_hint: 1,0.5
+            font_name: 'font.ttf'
+            halign: 'center'
+            valign: 'middle'
+            color: 0,0,0,1
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        TextInput:
+            id: input_title
+            font_name: 'font.ttf'
+            hint_text:'Заголовок'
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+            multiline: False
+            size_hint: 1,0.5
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        Label:
+            text: "Текст статьи"
+            text_size: self.size
+            size_hint: 1,0.5
+            font_name: 'font.ttf'
+            halign: 'center'
+            valign: 'middle'
+            color: 0,0,0,1
+        TextInput:
+            id: input_text
+            font_name: 'font.ttf'
+            hint_text:'Текст статьи'
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+            multiline: True
+            size_hint: 1,1.5
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        Button:
+            id: but1
+            size_hint: 0.2,0.5
+            text: "Добавить"
+            font_name: 'font.ttf'
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            background_normal: 'button.png'
+            background_down: 'button_on.png'
+            on_release:
+                root.add_material()
+        Button:
+            id: but2
+            size_hint: 0.1, 1.2
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            background_normal: 'exit.png'
+            background_down: 'exit_on.png'
+            on_release:
+                app.root.current = "menu_red"
 
+<ReadingMaterial>
+    name: "read_mat"
+    on_pre_enter: root.get_materials()
+    title: title_label
+    text: text_input
+    canvas.before:
+        Color:
+            rgba: 253, 253, 152, 1
+        Rectangle:
+            pos:self.pos
+            size:self.size
+    BoxLayout:
+        orientation: 'vertical'
+        padding:10
+        spacing:10
+        Label:
+            id: title_label
+            text: "Заголовок"
+            font_size: '15pt'
+            size_hint: 1,0.5
+            font_name: 'font.ttf'
+            halign: 'center'
+            valign: 'middle'
+            color: 0,0,0,1
+        Label:
+            size_hint: 1,0.3
+            canvas:
+                Color:
+                    rgba: 0.85, 0.97, 0.97, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            id: text_input
+            font_name: 'font.ttf'
+            text:'Текст статьи'
+            text_size: self.size
+            text_color: 0,0,0,1
+            background_color: 0, 0, 0, 0
+            halign: 'center'
+            valign: 'middle'
+            multiline: True
+            size_hint: 1,4
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            disabled: True
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 100
+            Button:
+                size_hint: 0.5, 1
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                background_normal: 'exit.png'
+                background_down: 'exit_on.png'
+                on_release:
+                    app.root.current = "menu_usr"
+            Label:
+                text: ""
+            Button:
+                size_hint: 0.5, 1.2
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                background_normal: 'next.png'
+                background_down: 'next_on.png'
+                on_release:
+                    root.change_text()
+<Calculator>
+    name: "calculator"
+    display: entry
+    canvas.before:
+        Color:
+            rgba: 253, 253, 152, 1
+        Rectangle:
+            pos:self.pos
+            size:self.size
+    GridLayout:
+        id: calculator
+        rows: 6
+        padding: 10
+        spacing: 10
+        BoxLayout:
+            TextInput:
+                id: entry
+                font_size: 32
+                multiline: False
+        BoxLayout:
+            spacing: 10
+            Button:
+                text: "7"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "8"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "9"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "+"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+        BoxLayout:
+            spacing: 10
+            Button:
+                text: "4"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "5"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "6"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "-"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+        BoxLayout:
+            spacing: 10
+            Button:
+                text: "1"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "2"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "3"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "*"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+        BoxLayout:
+            spacing: 10
+            Button:
+                text: "AC"
+                font_size: 32
+                on_press: entry.text = ""
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "0"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "="
+                font_size: 32
+                on_press: root.calculate(entry.text)
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+            Button:
+                text: "/"
+                font_size: 32
+                on_press: entry.text += self.text
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+        BoxLayout:
+            Button:
+                font_size: 20
+                text: "Выйти"
+                background_normal: 'button.png'
+                background_down: 'button_on.png'
+                on_press:
+                    entry.text = ""
+                    app.root.current = "menu_usr"
