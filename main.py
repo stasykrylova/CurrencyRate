@@ -3,6 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, RiseInTransition
 from kivy.lang import Builder
 import sqlite3
 import plyer
+from Prediction import Prediction
 
 
 class MainWindow(Screen):
@@ -180,6 +181,45 @@ class Calculator(Screen):
                 self.display.text = "Ошибка"
 
 
+class PredictionWindow(Screen):
+    str_prediction = ''
+    str_date = ''
+    prediction = []
+    stock = ''
+
+    def make_prediction(self):
+        action = self.act_name.text.lower()
+        if action != '':
+            self.prediction = Prediction(action)
+            if self.prediction.stock is not None:
+                self.prediction.prepare_data()
+                self.prediction.predict()
+                self.prediction.make_table()
+                self.prediction.make_png()
+                self.im.source = 'new.png'
+                self.prediction.make_string()
+                self.str_date = self.prediction.now.strftime("%Y-%m-%d")
+                self.str_prediction = self.prediction.string_prediction
+                self.add_prediction()
+                self.stock = self.prediction.code
+            else:
+                plyer.notification.notify(title='Внимание!', message="Такой акции не найдено!")
+        else:
+            plyer.notification.notify(title='Внимание!', message="Название акции должно быть заполнено!")
+
+    def make_graph(self):
+        self.prediction.make_diagram()
+        self.im.source = 'saved_figure.png'
+
+    def add_prediction(self):
+        con = sqlite3.connect('user.db')
+        cur = con.cursor()
+        sql = "INSERT INTO predictions (date, stock, prediction) VALUES (?,?,?)"
+        cur.execute(sql, (self.str_date, self.stock, self.str_prediction))
+        con.commit()
+        con.close()
+
+
 class Manager(ScreenManager):
     pass
 
@@ -190,6 +230,8 @@ kv = Builder.load_file("my.kv")
 class MainApp(App):
 
     def build(self):
+        self.icon = 'logo.png'
+        self.title = 'Держи курс!'
         con = sqlite3.connect('user.db')
         cur = con.cursor()
         cur.execute(""" CREATE TABLE IF NOT EXISTS id(
@@ -206,6 +248,13 @@ class MainApp(App):
                     material text NOT NULL
                     )
                     """)
+        cur.execute(""" CREATE TABLE IF NOT EXISTS predictions(
+                            ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                            date text NOT NULL,
+                            stock text NOT NULL,
+                            prediction text
+                            )
+                            """)
         cur.execute("""
             CREATE TABLE IF NOT EXISTS roles(
             ID int,
